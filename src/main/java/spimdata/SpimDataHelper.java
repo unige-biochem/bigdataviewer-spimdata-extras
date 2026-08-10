@@ -4,19 +4,23 @@
  * %%
  * Copyright (C) 2020 - 2026 EPFL
  * %%
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
  * 
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
  * 
- * You should have received a copy of the GNU General Public
- * License along with this program.  If not, see
- * <http://www.gnu.org/licenses/gpl-3.0.html>.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
  * #L%
  */
 
@@ -33,6 +37,14 @@ import net.imglib2.realtransform.AffineTransform3D;
  */
 public class SpimDataHelper {
 
+	/**
+	 * Removes the given attributes from all view setups of the dataset.
+	 *
+	 * @param asd the dataset to modify
+	 * @param entityNames attribute names, as declared in the
+	 *          {@code ViewSetupAttributeIo} annotation, for instance
+	 *          {@code "displaysettings"}
+	 */
 	public static void removeEntities(AbstractSpimData<?> asd,
 		String... entityNames)
 	{
@@ -43,6 +55,14 @@ public class SpimDataHelper {
 		});
 	}
 
+	/**
+	 * Removes the given attributes from all view setups of the dataset.
+	 *
+	 * @param asd the dataset to modify
+	 * @param entityClasses entity classes, for instance
+	 *          {@code Displaysettings.class}
+	 */
+	@SafeVarargs
 	public static void removeEntities(AbstractSpimData<?> asd,
 		Class<? extends Entity>... entityClasses)
 	{
@@ -54,6 +74,14 @@ public class SpimDataHelper {
 		});
 	}
 
+	/**
+	 * Preconcatenates an affine transform to every view registration of the
+	 * dataset, in other words moves the whole dataset in physical space.
+	 *
+	 * @param asd the dataset to modify
+	 * @param name name given to the appended view transform
+	 * @param at3d the transform to preconcatenate
+	 */
 	public static void pretransform(AbstractSpimData<?> asd, String name,
 		AffineTransform3D at3d)
 	{
@@ -62,6 +90,16 @@ public class SpimDataHelper {
 				new ViewTransformAffine(name, at3d)));
 	}
 
+	/**
+	 * Scales the whole dataset in physical space, see
+	 * {@link #pretransform(AbstractSpimData, String, AffineTransform3D)}.
+	 *
+	 * @param asd the dataset to modify
+	 * @param name name given to the appended view transform
+	 * @param scaleX scaling factor along X
+	 * @param scaleY scaling factor along Y
+	 * @param scaleZ scaling factor along Z
+	 */
 	public static void scale(AbstractSpimData<?> asd, String name, double scaleX,
 		double scaleY, double scaleZ)
 	{
@@ -70,15 +108,32 @@ public class SpimDataHelper {
 		pretransform(asd, name, at3d);
 	}
 
+	/**
+	 * Scales the whole dataset isotropically in physical space.
+	 *
+	 * @param asd the dataset to modify
+	 * @param name name given to the appended view transform
+	 * @param scale scaling factor applied along the three axes
+	 */
 	public static void scale(AbstractSpimData<?> asd, String name, double scale) {
 		scale(asd, name, scale, scale, scale);
 	}
 
+	/**
+	 * Translates the whole dataset in physical space, see
+	 * {@link #pretransform(AbstractSpimData, String, AffineTransform3D)}.
+	 *
+	 * @param asd the dataset to modify
+	 * @param name name given to the appended view transform
+	 * @param translateX translation along X
+	 * @param translateY translation along Y
+	 * @param translateZ translation along Z
+	 */
 	public static void translate(AbstractSpimData<?> asd, String name,
 		double translateX, double translateY, double translateZ)
 	{
 		AffineTransform3D at3d = new AffineTransform3D();
-		at3d.scale(translateX, translateY, translateZ);
+		at3d.translate(translateX, translateY, translateZ);
 		pretransform(asd, name, at3d);
 	}
 
