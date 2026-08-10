@@ -36,42 +36,68 @@ import org.jdom2.Element;
 public class XmlIoDisplaysettings extends XmlIoEntity<Displaysettings> {
 
 	public static final String DISPLAYSETTINGS_XML_TAG = "Displaysettings";
-	public static final String PROJECTION_MODE_XML_TAG = "Projection_Mode";// underscore
-																																					// necessary
-																																					// for
-																																					// valid
-																																					// xml
-																																					// element
-																																					// to
-																																					// store
-																																					// in
-																																					// @see
-																																					// DisplaySettings
+
+	public static final String IS_SET_XML_TAG = "isset";
+
+	public static final String COLOR_XML_TAG = "color";
+
+	public static final String MIN_XML_TAG = "min";
+
+	public static final String MAX_XML_TAG = "max";
+
+	// the underscore keeps this a valid xml element name
+	public static final String PROJECTION_MODE_XML_TAG = "Projection_Mode";
+
+	/**
+	 * Tags added in 0.23.0. They are absent from datasets written by earlier
+	 * versions, so {@link #fromXml(Element)} reads them through the defaulting
+	 * overloads of {@link XmlHelpers}.
+	 */
+	public static final String IS_LABEL_IMAGE_XML_TAG = "islabelimage";
+
+	public static final String LUT_NAME_XML_TAG = "lutname";
 
 	public XmlIoDisplaysettings() {
 		super(DISPLAYSETTINGS_XML_TAG, Displaysettings.class);
+		// Without this, XmlIoEntity treats the tags below as foreign content: it
+		// stashes them on read and prepends them again on write, so a read /
+		// modify / write cycle emits every tag twice, the stale value first.
+		handledTags.add(IS_SET_XML_TAG);
+		handledTags.add(COLOR_XML_TAG);
+		handledTags.add(MIN_XML_TAG);
+		handledTags.add(MAX_XML_TAG);
+		handledTags.add(PROJECTION_MODE_XML_TAG);
+		handledTags.add(IS_LABEL_IMAGE_XML_TAG);
+		handledTags.add(LUT_NAME_XML_TAG);
 	}
 
 	@Override
 	public Element toXml(final Displaysettings ds) {
 		final Element elem = super.toXml(ds);
-		elem.addContent(XmlHelpers.booleanElement("isset", ds.isSet));
-		elem.addContent(XmlHelpers.intArrayElement("color", ds.color));
-		elem.addContent(XmlHelpers.doubleElement("min", ds.min));
-		elem.addContent(XmlHelpers.doubleElement("max", ds.max));
+		elem.addContent(XmlHelpers.booleanElement(IS_SET_XML_TAG, ds.isSet));
+		elem.addContent(XmlHelpers.intArrayElement(COLOR_XML_TAG, ds.color));
+		elem.addContent(XmlHelpers.doubleElement(MIN_XML_TAG, ds.min));
+		elem.addContent(XmlHelpers.doubleElement(MAX_XML_TAG, ds.max));
 		elem.addContent(XmlHelpers.textElement(PROJECTION_MODE_XML_TAG,
 			ds.projectionMode));
+		elem.addContent(XmlHelpers.booleanElement(IS_LABEL_IMAGE_XML_TAG,
+			ds.isLabelImage));
+		elem.addContent(XmlHelpers.textElement(LUT_NAME_XML_TAG, ds.lutName == null
+			? "" : ds.lutName));
 		return elem;
 	}
 
 	@Override
 	public Displaysettings fromXml(final Element elem) throws SpimDataException {
 		final Displaysettings ds = super.fromXml(elem);
-		ds.isSet = XmlHelpers.getBoolean(elem, "isset");
-		ds.color = XmlHelpers.getIntArray(elem, "color");
-		ds.min = XmlHelpers.getDouble(elem, "min");
-		ds.max = XmlHelpers.getDouble(elem, "max");
+		ds.isSet = XmlHelpers.getBoolean(elem, IS_SET_XML_TAG);
+		ds.color = XmlHelpers.getIntArray(elem, COLOR_XML_TAG);
+		ds.min = XmlHelpers.getDouble(elem, MIN_XML_TAG);
+		ds.max = XmlHelpers.getDouble(elem, MAX_XML_TAG);
 		ds.projectionMode = XmlHelpers.getText(elem, PROJECTION_MODE_XML_TAG);
+		// tags below may be missing from datasets written before they existed
+		ds.isLabelImage = XmlHelpers.getBoolean(elem, IS_LABEL_IMAGE_XML_TAG, false);
+		ds.lutName = XmlHelpers.getText(elem, LUT_NAME_XML_TAG, "");
 		return ds;
 	}
 }

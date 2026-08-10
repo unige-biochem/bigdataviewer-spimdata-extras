@@ -39,23 +39,31 @@ import org.jdom2.Element;
 @ViewSetupAttributeIo(name = "well", type = Well.class)
 public class XmlIoWell extends XmlIoNamedEntity<Well> {
 
+    public static final String ROW_XML_TAG = "row";
+
+    public static final String COLUMN_XML_TAG = "column";
+
     public XmlIoWell() {
         super("well", Well.class);
+        // otherwise XmlIoEntity treats these as foreign content and writes them
+        // twice on a read / modify / write cycle
+        handledTags.add(ROW_XML_TAG);
+        handledTags.add(COLUMN_XML_TAG);
     }
 
     @Override
     public Element toXml(final Well w) {
         final Element elem = super.toXml(w);
-        elem.addContent(XmlHelpers.intElement("row", w.row));
-        elem.addContent(XmlHelpers.intElement("column", w.column));
+        elem.addContent(XmlHelpers.intElement(ROW_XML_TAG, w.row));
+        elem.addContent(XmlHelpers.intElement(COLUMN_XML_TAG, w.column));
         return elem;
     }
 
     @Override
     public Well fromXml(final Element elem) throws SpimDataException {
         final Well w = super.fromXml(elem);
-        w.row = XmlHelpers.getInt(elem, "row");
-        w.column = XmlHelpers.getInt(elem, "column");
+        w.row = XmlHelpers.getInt(elem, ROW_XML_TAG);
+        w.column = XmlHelpers.getInt(elem, COLUMN_XML_TAG);
         return w;
     }
 
