@@ -11,7 +11,7 @@
 
 	<groupId>ch.epfl.biop</groupId>
 	<artifactId>bigdataviewer-spimdata-extras</artifactId>
-	<version>0.22.1-SNAPSHOT</version>
+	<version>0.23.0-SNAPSHOT</version>
 
 	<name>Spimdata Extra Settings</name>
 	<description>Repo containing extra settings that can be stored in spimdata file format</description>
@@ -23,7 +23,8 @@
 	</organization>
 	<licenses>
 		<license>
-			<name>Simplified BSD License</name>
+			<name>MIT License</name>
+			<url>https://opensource.org/licenses/MIT</url>
 			<distribution>repo</distribution>
 		</license>
 	</licenses>
@@ -80,11 +81,10 @@
 
 	<properties>
 		<package-name>spimdata.util</package-name>
-		<main-class>spimdata.util.DummyCommand</main-class>
-		<license.licenseName>gpl_v3</license.licenseName>
+		<license.licenseName>mit</license.licenseName>
 		<license.copyrightOwners>EPFL</license.copyrightOwners>
-		<scijava.app.directory>C:/Fiji_template</scijava.app.directory>
 		<license.excludes>**/resources/**</license.excludes>
+		<!-- <scijava.app.directory>C:/Fiji_template</scijava.app.directory> -->
 
 		<!-- NB: Deploy releases to the SciJava Maven repository. -->
 		<releaseProfiles>sign,deploy-to-scijava</releaseProfiles>
