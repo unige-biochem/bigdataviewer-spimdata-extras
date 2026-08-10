@@ -58,6 +58,18 @@ public class Displaysettings extends NamedEntity implements
 	// stores projection mode
 	public String projectionMode = "Sum"; // Default projection mode
 
+	// true if the view setup holds a label image, i.e. integer object indices,
+	// rather than intensities. Renderers typically use this to switch to a
+	// categorical LUT and to disable interpolation
+	public boolean isLabelImage = false;
+
+	// name of the lookup table to display this view setup with, for instance
+	// "Fire" or "glasbey_on_dark". Empty means no LUT was specified, in which
+	// case the color field above should be used. Resolving a name to actual
+	// colors is left to the caller: this library deliberately does not depend on
+	// any LUT provider
+	public String lutName = "";
+
 	public Displaysettings(final int id, final String name) {
 		super(id, name);
 	}
@@ -104,6 +116,11 @@ public class Displaysettings extends NamedEntity implements
 		str += "min = " + this.min + ", ";
 
 		str += "max = " + this.max;
+
+		if (this.lutName != null && !this.lutName.isEmpty()) str += ", lut = " +
+			this.lutName;
+
+		if (this.isLabelImage) str += ", label image";
 
 		return str;
 	}

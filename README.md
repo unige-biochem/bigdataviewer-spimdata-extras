@@ -19,7 +19,7 @@ dependency is enough: no registration code is needed.
 
 | Class | Extends | XML attribute | Stores |
 |---|---|---|---|
-| `Displaysettings` | `NamedEntity` | `displaysettings` | color (RGBA), min / max display range, projection mode |
+| `Displaysettings` | `NamedEntity` | `displaysettings` | color (RGBA), min / max display range, projection mode, LUT name, label image flag |
 | `ImageName` | `NamedEntity` | `imagename` | the name of the image the view setup originates from |
 | `Plate` | `NamedEntity` | `plate` | the multi-well plate the view setup belongs to |
 | `Well` | `NamedEntity` | `well` | the well, plus its (row, column) position in the plate |
@@ -81,6 +81,34 @@ viewSetup.setAttribute(ds);
 Displaysettings.applyDisplaysettings(sac, viewSetup.getAttribute(Displaysettings.class));
 ```
 
+Two fields of `Displaysettings` are pure metadata, which this library stores and returns but never
+acts on:
+
+```java
+ds.isLabelImage = true;         // holds object indices, not intensities
+ds.lutName = "glasbey_on_dark"; // LUT to display it with
+```
+
+`isLabelImage` lets a renderer switch to a categorical LUT and turn interpolation off.
+`lutName` names a lookup table rather than embedding it: resolving that name to actual colors needs
+a LUT provider (`net.imagej.display.ColorTables`, Fiji's `LutLoader`, …), and this artifact
+deliberately depends on neither, so the resolution is left to the caller. An empty `lutName` means
+no LUT was specified and the `color` field should be used instead.
+
+## Compatibility
+
+The xml format only ever grows: new versions add tags, they do not rename or repurpose existing
+ones. Concretely,
+
+- **datasets written by older versions stay readable** — tags added later are read through the
+  defaulting overloads of `XmlHelpers`, so a dataset without `islabelimage` yields `false` and one
+  without `lutname` yields `""`;
+- **tags written by newer versions are preserved** — `XmlIoEntity` stashes children it does not
+  recognise and writes them back out, so opening a dataset from a later version and saving it does
+  not silently drop its extra fields.
+
+`src/test/java/spimdata/util/XmlIoCompatibilityTest.java` pins both properties down.
+
 Dropping entities from a dataset before saving it:
 
 ```java
@@ -117,9 +145,13 @@ referenced by id from each view setup:
     <min>0.0</min>
     <max>255.0</max>
     <Projection_Mode>Sum</Projection_Mode>
+    <islabelimage>false</islabelimage>
+    <lutname></lutname>
   </Displaysettings>
 </Attributes>
 ```
+
+`islabelimage` and `lutname` were added in 0.23.0; earlier datasets simply do not carry them.
 
 ## Building
 
