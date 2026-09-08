@@ -118,27 +118,4 @@
 			<artifactId>bigdataviewer-core</artifactId>
 		</dependency>
 	</dependencies>
-
-	<!--
-	NB: pom-scijava's deploy-to-scijava profile deploys via WebDAV
-	(dav: URLs plus wagon-webdav-jackrabbit). Since maven.scijava.org moved to
-	Nexus 3 Core, that wagon's burst of directory-probing requests trips a
-	server-side rate limiter and the upload fails with HTTP 429. Nexus 3
-	accepts a plain HTTP PUT, so deploy over https: instead, which is far fewer
-	requests. The repository ids are unchanged, so the credentials that
-	ci-build.sh writes into settings.xml still apply.
-	These alt* properties override the profile's distributionManagement.
-	-->
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-deploy-plugin</artifactId>
-				<configuration>
-					<altReleaseDeploymentRepository>scijava.releases::https://maven.scijava.org/content/repositories/releases</altReleaseDeploymentRepository>
-					<altSnapshotDeploymentRepository>scijava.snapshots::https://maven.scijava.org/content/repositories/snapshots</altSnapshotDeploymentRepository>
-				</configuration>
-			</plugin>
-		</plugins>
-	</build>
 </project>
