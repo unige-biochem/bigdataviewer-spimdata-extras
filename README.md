@@ -1,5 +1,5 @@
-[![](https://github.com/unige-biochem/bigdataviewer-spimdata-extras/actions/workflows/build-main.yml/badge.svg)](https://github.com/unige-biochem/bigdataviewer-spimdata-extras/actions/workflows/build-main.yml)
-[![Maven Scijava Version](https://img.shields.io/github/v/tag/BIOP/bigdataviewer-spimdata-extras?label=Version-[Maven%20Scijava])](https://maven.scijava.org/#browse/browse:releases:ch%2Fepfl%2Fbiop%2Fbigdataviewer-spimdata-extras)
+[![Build Status](https://github.com/unige-biochem/bigdataviewer-spimdata-extras/actions/workflows/build.yml/badge.svg)](https://github.com/unige-biochem/bigdataviewer-spimdata-extras/actions/workflows/build.yml)
+[![Maven SciJava Version](https://img.shields.io/github/v/tag/BIOP/bigdataviewer-spimdata-extras?label=Version-[Maven%20Scijava])](https://maven.scijava.org/#browse/browse:releases:ch%2Fepfl%2Fbiop%2Fbigdataviewer-spimdata-extras)
 
 # bigdataviewer-spimdata-extras
 
