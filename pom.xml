@@ -86,11 +86,11 @@
 		<license.excludes>**/resources/**</license.excludes>
 		<!-- <scijava.app.directory>C:/Fiji_template</scijava.app.directory> -->
 		<!-- NB: Parent pom-scijava sets Java 11. We override it here to stay compatible with FIJI stable / Java 8. -->
-        <scijava.jvm.version>8</scijava.jvm.version>
-        <scijava.jvm.build.version>[1.8.0-101,)</scijava.jvm.build.version>
-        <!-- Use older versions of dependencies to stay compatible with FIJI stable / Java 8. -->
-        <bigdataviewer-core.version>10.6.8</bigdataviewer-core.version>
-        <scifio.version>0.48.0</scifio.version>
+		<scijava.jvm.version>8</scijava.jvm.version>
+		<scijava.jvm.build.version>[1.8.0-101,)</scijava.jvm.build.version>
+		<!-- Use older versions of dependencies to stay compatible with FIJI stable / Java 8. -->
+		<bigdataviewer-core.version>10.6.8</bigdataviewer-core.version>
+		<scifio.version>0.48.0</scifio.version>
 
 		<!-- NB: Deploy releases to the SciJava Maven repository. -->
 		<releaseProfiles>sign,deploy-to-scijava</releaseProfiles>
